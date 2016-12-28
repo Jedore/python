@@ -129,7 +129,7 @@ class InputDialog(wx.Dialog):
                 mins = (seconds - 1.5*3600)/60 
             elif e > stand1:
                 mins = (seconds - 2*3600)/60 
-            verify = str(mins- 8*60)
+            verify = str(mins- 8*60).split('.')[0]
             
         conn = None
         try:
@@ -178,6 +178,9 @@ class WorkHour(wx.Dialog):
         
         btnSizer.Add(btnI, 0, wx.ALL, 4)
         
+        self.label = wx.StaticText(self, -1, "Total:");
+        
+        btnSizer.Add(self.label, 0, wx.ALIGN_RIGHT|wx.ALL, 5)
         ''' 
         btnM = wx.Button(self, 10, "modify", (20,20))
         self.Bind(wx.EVT_BUTTON, self.OnModify, btnM)
@@ -210,8 +213,12 @@ class WorkHour(wx.Dialog):
             curs.execute(g_sql_search)
             rows = curs.fetchall()
             self.dvlc.DeleteAllItems()
+            Total = 0.0
             for row in rows:
+                if '' != row[3]:
+                    Total += int(row[3])
                 self.dvlc.InsertItem(0, row)
+            self.label.SetLabelText('Total:' + str(Total))
             g_logger.info('search')
         except:
             g_logger.error(traceback.format_exc())
